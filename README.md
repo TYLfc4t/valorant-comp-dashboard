@@ -1,6 +1,6 @@
-# 🟡 Wolves Esports - Valorant Scrim Dashboard
+# 🔴 Tyloo Esports - Valorant Scrim Dashboard
 
-This is a custom-built analytics dashboard created for **Wolves Esports Valorant** to analyze scrim performance in depth, featuring:
+This is a custom-built analytics dashboard created for **Tyloo Esports Valorant** to analyze scrim performance in depth, featuring:
 
 - 📊 **Map Win Rates & Round Insights**
 - 🧩 **5-Agent Composition Win Rates**
@@ -48,7 +48,7 @@ Built using **Streamlit**, **Plotly**, and custom CSS to match Wolves' black and
 - **Plotly** for dynamic charts
 - **Pandas** for all data handling
 - **Excel**-friendly CSV format for easy updates
-- **Wolves theme** with black + #FDB913 yellow
+- **Tyloo theme** with black +rgb(253, 19, 19) red
 
 ---
 
@@ -56,8 +56,8 @@ Built using **Streamlit**, **Plotly**, and custom CSS to match Wolves' black and
 
 1. Clone the repo
 ```bash
-git clone https://github.com/yourusername/wolves-valorant-dashboard.git
-cd wolves-valorant-dashboard
+git clone https://github.com/yourusername/valorant-comp-dashboard.git
+cd valorant-comp-dashboard
 ```
 
 2. Install dependencies
@@ -68,6 +68,8 @@ pip install -r requirements.txt
 3. Run the dashboard
 ```bash
 streamlit run streamlit_dashboard.py
+OR
+python3 -m streamlit run streamlit_dashboard.py
 ```
 
 Make sure `cleaned_score.csv`, `form.csv`, and the agent icons are present.
