@@ -158,7 +158,7 @@ with tabs[0]:
 ### --- Composition Win Rate Chart (Styled like rib.gg) ---
 
 # This block should only be inside the Map Composition tab
-with tabs[1]st.plotly_chart(fig_comp, use_container_width=True):
+with tabs[1]:
     st.subheader("Top 5-agent Composition Win Rates by Map")
     if not form_df.empty:
         valid_maps = []
