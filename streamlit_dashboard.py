@@ -158,7 +158,7 @@ with tabs[0]:
 ### --- Composition Win Rate Chart (Styled like rib.gg) ---
 
 # This block should only be inside the Map Composition tab
-with tabs[1]:
+with tabs[1]st.plotly_chart(fig_comp, use_container_width=True):
     st.subheader("Top 5-agent Composition Win Rates by Map")
     if not form_df.empty:
         valid_maps = []
@@ -272,7 +272,130 @@ with tabs[1]:
 
 
         st.plotly_chart(fig_comp, use_container_width=True)
+                # Agent Icons Display with Bar Chart (rib.gg style, Tyloo colors)
+        if not grouped.empty:
+            # Custom CSS for rib.gg style layout
+            st.markdown("""
+            <style>
+            .composition-container {
+                margin: 4px 0;
+            }
+            .composition-bar {
+                display: flex;
+                align-items: center;
+                background: #2a2a2a;
+                border: 1px solid #333;
+                border-radius: 4px;
+                padding: 8px;
+                margin: 3px 0;
+                min-height: 45px;
+                position: relative;
+                overflow: hidden;
+            }
+            .bar-background {
+                position: absolute;
+                left: 180px;
+                top: 0;
+                height: 100%;
+                background: #DC143C;  /* Tyloo red */
+                border-radius: 0 4px 4px 0;
+                z-index: 1;
+            }
+            .agents-container {
+                display: flex;
+                gap: 4px;
+                align-items: center;
+                min-width: 170px;
+                z-index: 2;
+                position: relative;
+            }
+            .agent-icon-img {
+                width: 28px;
+                height: 28px;
+                border-radius: 3px;
+                border: 1px solid rgba(255,255,255,0.2);
+            }
+            .win-rate-info {
+                margin-left: auto;
+                z-index: 2;
+                position: relative;
+                color: white;
+                font-weight: bold;
+                text-align: right;
+                padding-right: 12px;
+            }
+            .win-percentage {
+                font-size: 16px;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            }
+            .game-count {
+                font-size: 11px;
+                color: #ccc;
+            }
+            </style>
+            """, unsafe_allow_html=True)
 
+            st.markdown(f"### Top Compositions on {selected_map}")
+
+            # Calculate max width for bar scaling
+            max_win_rate = grouped['Win Rate %'].max()
+
+            for idx, row in grouped.iterrows():
+                composition = row['Composition']
+                win_rate = row['Win Rate %']
+                games = row['games']
+                wins = row['wins']
+                losses = row['losses']
+                draws = row['draws']
+
+                # Calculate bar width percentage (scale to fit remaining space)
+                bar_width_percent = (win_rate / max_win_rate * 80) if max_win_rate > 0 else 0
+
+                # Create agent icons HTML
+                icons_html = ""
+                for agent in composition:
+                    icon_name = agent.lower().replace('/', '_').replace(' ', '_')
+                    icon_path = f"assets/agents/{icon_name}.png"
+
+                    if os.path.exists(icon_path):
+                        # Convert to base64 for HTML embedding
+                        import base64
+                        try:
+                            with open(icon_path, "rb") as img_file:
+                                img_data = base64.b64encode(img_file.read()).decode()
+                            icons_html += f'<img src="data:image/png;base64,{img_data}" class="agent-icon-img" title="{agent}" />'
+                        except Exception:
+                            icons_html += (
+                                '<div class="agent-icon-img" '
+                                'style="background:#666;color:white;display:flex;align-items:center;'
+                                'justify-content:center;font-size:10px;" '
+                                f'title="{agent}">{agent[:2]}</div>'
+                            )
+                    else:
+                        icons_html += (
+                            '<div class="agent-icon-img" '
+                            'style="background:#666;color:white;display:flex;align-items:center;'
+                            'justify-content:center;font-size:10px;" '
+                            f'title="{agent}">{agent[:2]}</div>'
+                        )
+
+                # Create the complete composition bar (rib.gg style)
+                composition_html = f"""
+                <div class="composition-container">
+                    <div class="composition-bar">
+                        <div class="bar-background" style="width: {bar_width_percent}%;"></div>
+                        <div class="agents-container">
+                            {icons_html}
+                        </div>
+                        <div class="win-rate-info">
+                            <div class="win-percentage">{win_rate:.1f}%</div>
+                            <div class="game-count">({games} games)</div>
+                        </div>
+                    </div>
+                </div>
+                """
+
+                st.markdown(composition_html, unsafe_allow_html=True)
 
 # 📈 ROUND INSIGHTS TAB
 with tabs[2]:
