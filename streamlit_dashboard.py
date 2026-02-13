@@ -6,7 +6,7 @@ import plotly.express as px
 from data_cleaner import clean_scrim_form
 import base64
 
-# Hardcoded credentials
+# Hardcoded login credentials 
 USERNAME = "admin"
 PASSWORD = "tyloo123"
 
