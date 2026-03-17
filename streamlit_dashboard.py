@@ -87,8 +87,20 @@ except Exception as e:
 tabs = st.tabs(["📊 Overview", "🧩 Map Composition Win Rates", "📈 Round Insights","🔫 Pistol Insights","🔢 Player Stats","🆚 Player Comparison"])
 
 # 📊 OVERVIEW TAB
+# 📊 OVERVIEW TAB
 with tabs[0]:
     st.markdown("### 📅 Filter by Date Range")
+
+    if score_df.empty:
+        st.warning("⚠️ No score data loaded. Check that cleaned_score.csv exists in your repo.")
+        st.stop()
+
+    score_df.columns = score_df.columns.str.strip()
+
+    if 'Date' not in score_df.columns:
+        st.error(f"'Date' column not found. Available columns: {score_df.columns.tolist()}")
+        st.stop()
+
     overview_dates = sorted(score_df['Date'].dropna().unique())
     date_col1, date_col2 = st.columns(2)
     start_date_overview = date_col1.selectbox("Start Date (Overview)", overview_dates, key="overview_start")
