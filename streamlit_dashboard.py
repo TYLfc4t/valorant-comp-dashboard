@@ -83,10 +83,15 @@ try:
 except Exception as e:
     score_df = pd.DataFrame()
     st.warning(f"⚠️ Couldn't load cleaned_score.csv: {e}")
+# Load foracs.csv for beeswarm and heatmap
+try:
+    foracs_df = pd.read_csv("foracs.csv")
+except Exception as e:
+    foracs_df = pd.DataFrame()
+    st.warning(f"⚠️ Couldn't load foracs.csv: {e}")
 
 tabs = st.tabs(["📊 Overview", "🧩 Map Composition Win Rates", "📈 Round Insights","🔫 Pistol Insights","🔢 Player Stats","🆚 Player Comparison"])
 
-# 📊 OVERVIEW TAB
 # 📊 OVERVIEW TAB
 with tabs[0]:
     st.markdown("### 📅 Filter by Date Range")
@@ -892,8 +897,7 @@ with tabs[4]:
         st.subheader("🐝 Player ACS Beeswarm Plot")
 
         # Clean + convert
-        df = pd.read_csv("foracs.csv")
-        df = foracs_df
+        df = foracs_df.copy()
         df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
         df['ACS'] = pd.to_numeric(df['ACS'], errors='coerce')
 
