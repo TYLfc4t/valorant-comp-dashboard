@@ -3,6 +3,7 @@ import pandas as pd
 from PIL import Image
 import os
 import plotly.express as px
+import plotly.graph_objects as go
 from data_cleaner import clean_scrim_form
 import base64
 
