@@ -893,6 +893,7 @@ with tabs[4]:
 
         # Clean + convert
         df = pd.read_csv("foracs.csv")
+        df = foracs_df
         df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
         df['ACS'] = pd.to_numeric(df['ACS'], errors='coerce')
 
