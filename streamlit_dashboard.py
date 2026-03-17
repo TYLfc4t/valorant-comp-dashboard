@@ -356,6 +356,77 @@ with tabs[1]:
                 st.markdown(composition_html, unsafe_allow_html=True)
         else:
             st.info(f"No composition data available for {selected_map}")
+    
+    # --- Win rates by agent by player (heatmap) ---
+    st.subheader("📊 Win Rate by Agent by Player")
+    if not foracs_df.empty and 'Result' in foracs_df.columns:
+        foracs_agg = foracs_df.groupby(['Player', 'Agent']).agg(
+            games=('Result', 'count'),
+            wins=('Result', lambda x: (x.str.strip().str.lower() == 'win').sum())
+        ).reset_index()
+        foracs_agg['Win Rate %'] = (foracs_agg['wins'] / foracs_agg['games'] * 100).round(1)
+        pivot = foracs_agg.pivot_table(index='Player', columns='Agent', values='Win Rate %', aggfunc='mean')
+        pivot_wins = foracs_agg.pivot_table(index='Player', columns='Agent', values='wins', aggfunc='sum')
+        pivot_games = foracs_agg.pivot_table(index='Player', columns='Agent', values='games', aggfunc='sum')
+        if not pivot.empty:
+            # Full grid: all players × all agents (not played = -1 for light grey)
+            all_players = sorted(foracs_df['Player'].dropna().unique())
+            all_agents = sorted(foracs_df['Agent'].dropna().unique())
+            pivot = pivot.reindex(index=all_players, columns=all_agents)
+            pivot_wins = pivot_wins.reindex(index=all_players, columns=all_agents)
+            pivot_games = pivot_games.reindex(index=all_players, columns=all_agents)
+            NOT_PLAYED = -1
+            z = pivot.values.copy()
+            z[pd.isna(z)] = NOT_PLAYED
+            z = z.astype(float)
+            # Build customdata: for hover - "Not played" or "Win Rate: X% (w/g)"
+            customdata = []
+            for player in all_players:
+                row = []
+                for agent in all_agents:
+                    g = pivot_games.loc[player, agent] if pd.notna(pivot_games.loc[player, agent]) else 0
+                    g = int(g)
+                    if g == 0:
+                        row.append("Not played")
+                    else:
+                        w = int(pivot_wins.loc[player, agent]) if pd.notna(pivot_wins.loc[player, agent]) else 0
+                        wr = pivot.loc[player, agent]
+                        wr = float(wr) if pd.notna(wr) else 0
+                        row.append(f"Win Rate: {wr:.0f}% ({w}/{g})")
+                customdata.append(row)
+            # Text: show % only where played
+            text = [[f"{v:.0f}%" if v >= 0 else "" for v in row] for row in z]
+            fig_heat = go.Figure(data=go.Heatmap(
+                z=z,
+                x=all_agents,
+                y=all_players,
+                customdata=customdata,
+                zmin=NOT_PLAYED,
+                zmax=100,
+                colorscale=[[0, '#9ca3af'], [0.01, '#dc2626'], [0.06, '#fef08a'], [0.36, '#86efac'], [0.66, '#22c55e'], [1, '#14532d']],
+                text=text,
+                texttemplate="%{text}",
+                textfont=dict(family='Rajdhani', size=12, color='white'),
+                hoverongaps=False,
+                hovertemplate="Player: %{y}<br>Agent: %{x}<br>%{customdata}<extra></extra>"
+            ))
+            fig_heat.update_layout(
+                title="Win Rate % by Player and Agent",
+                xaxis=dict(title='Agent', side='bottom', tickangle=-45, tickfont=dict(family='Rajdhani', color='#FDB913')),
+                yaxis=dict(title='Player', tickfont=dict(family='Rajdhani', color='#FDB913'), autorange='reversed'),
+                plot_bgcolor='#000000',
+                paper_bgcolor='#000000',
+                font=dict(family='Rajdhani', color='#FDB913'),
+                title_font=dict(size=18, color='#FDB913'),
+                margin=dict(l=80, r=40, t=60, b=120),
+                height=max(400, 48 * len(pivot.index) + 120),
+                width=max(400, 48 * len(pivot.columns) + 100)
+            )
+            st.plotly_chart(fig_heat, use_container_width=True)
+        else:
+            st.info("No player–agent combinations with data.")
+    else:
+        st.info("No foracs data available for win rate by agent by player.")
 
 # 📈 ROUND INSIGHTS TAB
 with tabs[2]:
