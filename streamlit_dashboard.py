@@ -932,7 +932,7 @@ with tabs[4]:
 
             fig, ax = plt.subplots(figsize=(10, 5))
             fig.patch.set_facecolor('#000000')
-            ax.set_facecolor('000000')
+            ax.set_facecolor('#000000')
             ax.spines['top'].set_visible(False)
             ax.spines['right'].set_visible(False)
             ax.spines['left'].set_color('#ffffff')
