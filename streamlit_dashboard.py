@@ -525,7 +525,7 @@ with tabs[2]:
                 return 'background-color: #78350f; color: white;'  # amber
 
         styled_df = summary[display_cols].style\
-            .applymap(highlight_win_rates, subset=['Avg_Atk_WR', 'Avg_Def_WR','Round WR'])\
+            .map(highlight_win_rates, subset=['Avg_Atk_WR', 'Avg_Def_WR','Round WR'])\
             .set_properties(**{'text-align': 'center'})\
             .set_table_styles([{
                 'selector': 'th',
