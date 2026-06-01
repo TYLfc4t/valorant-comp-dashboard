@@ -247,8 +247,9 @@ with tabs[1]:
             grouped['Icon Path'] = grouped['First Agent'].apply(lambda agent: f"assets/{agent}.png" if os.path.exists(f"assets/{agent}.png") else None)
             grouped = grouped.sort_values(by='Win Rate %', ascending=False).head(15)
         # 👇 Add this directly below — no extra indentation
-        grouped['First Agent'] = grouped['Composition'].apply(lambda x: x[0])
-        grouped['Icon Path'] = grouped['First Agent'].apply(lambda agent: f"assets/{agent}.png" if os.path.exists(f"assets/{agent}.png") else None)
+        if not grouped.empty:
+            grouped['First Agent'] = grouped['Composition'].apply(lambda x: x[0])
+            grouped['Icon Path'] = grouped['First Agent'].apply(lambda agent: f"assets/{agent}.png" if os.path.exists(f"assets/{agent}.png") else None)
 
 # Agent Icons Display with Bar Chart (rib.gg style)
         if not grouped.empty:
