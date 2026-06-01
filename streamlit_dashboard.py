@@ -230,7 +230,7 @@ with tabs[1]:
             grouped['Win Rate %'] = grouped['wins'] / grouped['games'] * 100
             grouped['Comp String'] = grouped['Composition'].apply(lambda x: '-'.join(x))
             grouped = grouped.sort_values(by='Win Rate %', ascending=False).head(15)
-            else:
+        else:
             grouped = pd.DataFrame()
 
         def get_agent_icon(agent_name):
