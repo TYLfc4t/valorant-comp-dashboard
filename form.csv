@@ -1,4 +1,4 @@
-Map,Player,Rounds,Kills,Deaths,Assists,ACS,Agent,FK,Plants,Defuses,FD,FK+FD,FBSR,FKPR,KPR,Date,K+A PR,Atk_Entry,Multi_Kills,Anchor_Time,Result
+Column 1,Player,Rounds,Kills,Deaths,Assists,ACS,Agent,FK,Plants,Defuses,FD,FK+FD,FBSR,FKPR,KPR,Date,K+A PR,Atk_Entry,Multi_Kills,Anchor_Time,Result
 Haven,splash,24,26,15,9,325,Jett,4,0,2,1,5,0.8,0.17,1.08,05/22/2026,1.46,,,,Win
 Haven,Erv,24,18,16,9,232,Omen,6,0,0,2,8,0.75,0.25,0.75,05/22/2026,1.13,,,,Win
 Haven,Scales,24,20,14,1,216,Cypher,3,1,0,1,4,0.75,0.13,0.83,05/22/2026,0.88,,,,Win
